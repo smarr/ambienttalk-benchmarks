@@ -1,0 +1,33 @@
+/*
+  thread-ring: Repeatedly switch from thread to thread passing one token.
+
+  This benchmark is based on the Computer Language Benchmarks Game.
+  http://benchmarksgame.alioth.debian.org/
+*/
+
+def createRing(numActors) {
+  def prev  := nil;
+  def first := nil;
+  
+  numActors.doTimes: { | i |
+    def act := actor: {
+      def nextActor;
+      def next(cnt) {
+      system.println(i);system.println(cnt);
+        (cnt == 0).ifTrue: { system.println(i) }
+        ifFalse: { nextActor<-next(cnt - 1)}
+      };
+      def setNext(actor) { nextActor := actor };
+    };
+    
+    act<-setNext(prev);
+    (prev == nil).ifTrue: { first := act };
+    prev := act;
+  };
+  
+  first<-setNext(prev);
+  prev
+};
+
+createRing(503)<-next(5000)
+
