@@ -1,0 +1,62 @@
+/*
+  binary-trees: Allocate and deallocate many many binary trees
+
+  This benchmark is based on the Computer Language Benchmarks Game.
+  http://benchmarksgame.alioth.debian.org/
+*/
+
+if: system.argv.length == 0 then: {
+  system.println("Usage: binarytrees.at <num>");
+  system.exit();
+};
+
+def n := 10;
+
+if: system.argv.length >= 1 then: {
+  n := system.argv[1].parseNumeric();
+};
+
+def makeTreeNode(left, right, item) {
+  object: {
+    def itemCheck() {
+      if: left == nil then: { item }
+      else: { item + left.itemCheck() - right.itemCheck() }
+    }
+  }
+};
+
+def bottomUpTree(item, depth) {
+  if: depth > 0 then: {
+    makeTreeNode(bottomUpTree(2 * item - 1, depth - 1),
+                 bottomUpTree(2 * item,     depth - 1),
+                 item)
+  } else: {
+    makeTreeNode(nil, nil, item)
+  }
+};
+
+def minDepth := 4;
+def maxDepth := if: minDepth + 2 > n then: { minDepth + 2 } else: { n };
+def stretchDepth := maxDepth + 1;
+
+def check := bottomUpTree(0, stretchDepth).itemCheck();
+
+system.println("stretch tree of depth "+ stretchDepth + "\t check: " + check);
+
+def longLivedTree := bottomUpTree(0, maxDepth);
+
+minDepth.to: maxDepth + 1 step: 2 do: { | depth | 
+   def iterations := 2.expt(maxDepth - depth + minDepth).floor();
+   check := 0;
+   
+   1.to: iterations + 1 do: { | i |
+     check := check + bottomUpTree( i, depth).itemCheck();
+     check := check + bottomUpTree(-i, depth).itemCheck();
+   };
+   system.println((iterations * 2 ).toText() + 
+                  "\t trees of depth " + depth.toText() +
+                  "\t check: " + check.toText());
+};
+
+system.println("long lived tree of depth " + maxDepth +
+               "\t check: "+ longLivedTree.itemCheck());

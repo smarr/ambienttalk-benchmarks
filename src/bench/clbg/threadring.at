@@ -5,6 +5,21 @@
   http://benchmarksgame.alioth.debian.org/
 */
 
+if: system.argv.length == 0 then: {
+  system.println("Usage: threadring.at <num-passes> [num-threads]"); 
+};
+
+def numPasses  := 50000000;
+def numThreads := 503;
+
+if: system.argv.length >= 1 then: {
+  numPasses := system.argv[1].parseNumeric();
+  
+  if: system.argv.length >= 2 then: {
+    numThreads := system.argv[2].parseNumeric();
+  }
+};
+
 def createRing(numActors) {
   def prev  := nil;
   def first := nil;
@@ -13,8 +28,8 @@ def createRing(numActors) {
     def act := actor: {
       def nextActor;
       def next(cnt) {
-      system.println(i);system.println(cnt);
-        (cnt == 0).ifTrue: { system.println(i) }
+         // system.println(i);system.println(cnt);
+        (cnt == 0).ifTrue: { system.println(i); system.exit(); }
         ifFalse: { nextActor<-next(cnt - 1)}
       };
       def setNext(actor) { nextActor := actor };
@@ -29,5 +44,5 @@ def createRing(numActors) {
   prev
 };
 
-createRing(503)<-next(5000)
+createRing(numThreads)<-next(numPasses)
 

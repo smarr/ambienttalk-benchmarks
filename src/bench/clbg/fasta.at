@@ -1,0 +1,165 @@
+/*
+  fasta: Generate and write random DNA sequences
+
+  This benchmark is based on the Computer Language Benchmarks Game.
+  http://benchmarksgame.alioth.debian.org/
+*/
+
+/*if: system.argv.length == 0 then: {
+  system.println("Usage: fasta.at <num>");
+  system.exit();
+};*/
+
+def n := 1000; //2500000;
+
+if: system.argv.length >= 1 then: {
+  n := system.argv[1].parseNumeric();
+};
+
+
+
+def LINE_LENGTH := 60;
+
+// pseudo-random number generator
+def IM   := 139968;
+def IA   := 3877;
+def IC   := 29573;
+
+def last := 42;
+def random(max) {
+  last := (last * IA + IC) % IM;
+  max * last / IM
+};
+
+// Weighted selection from alphabet
+def ALU :=  "GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGG"
+          + "GAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGA"
+          + "CCAGCCTGGCCAACATGGTGAAACCCCGTCTCTACTAAAAAT"
+          + "ACAAAAATTAGCCGGGCGTGGTGGCGCGCGCCTGTAATCCCA"
+          + "GCTACTCGGGAGGCTGAGGCAGGAGAATCGCTTGAACCCGGG"
+          + "AGGCGGAGGTTGCAGTGAGCCGAGATCGCGCCACTGCACTCC"
+          + "AGCCTGGGCGACAGAGCGAGACTCCGTCTCAAAAA";
+
+def ALUB := ALU.explode();
+
+def makeCumulative(frequencies) {
+  def cp := 0.0;
+  1.to: frequencies.length() + 1 do: { | i |
+    cp := cp + frequencies[i].p;
+    (frequencies[i]).p := cp;
+  }
+};
+
+// naive
+def selectRandom(frequencies) {
+  def len := frequencies.length();
+  def r   := random(1.0);
+  
+  def i := frequencies.find: { | f | r < f.p };
+  
+  (if: i == nil 
+     then: { frequencies[len] } 
+     else: { frequencies[i]   }).c
+};
+
+def BUFFER_SIZE := 1024;
+def bbuffer[BUFFER_SIZE] { 0 };
+
+def makeRandomFasta(id, desc, frequencies, n) {
+  def index := 1;
+  def m := 0;
+  
+  system.println(">" + id + " " + desc); 
+  
+  while: { n > 0 } do: {
+    if: n < LINE_LENGTH then: { m := n } else: { m := LINE_LENGTH };
+    if: BUFFER_SIZE - index + 1 < m then: {
+      system.print(bbuffer.select(1, index).implode());
+      index := 1;
+    }; 
+      
+    m.doTimes: { | i |
+      bbuffer[index] := selectRandom(frequencies);
+      index := index + 1;
+    };
+      
+    bbuffer[index] := "\n";
+    index := index + 1;
+    n := n - LINE_LENGTH;
+  };
+  
+  if: index != 1 then: { system.print(bbuffer.select(1, index).implode()); }
+};
+
+def Frequency := object: {
+  def c;
+  def p;
+  def init(aC, aP) {
+    c := aC;
+    p := aP;
+  }
+};
+
+def IUB := [Frequency.new("a", 0.27), 
+            Frequency.new("c", 0.12),
+            Frequency.new("g", 0.12), 
+            Frequency.new("t", 0.27),
+            
+            Frequency.new("B", 0.02), 
+            Frequency.new("D", 0.02),
+            Frequency.new("H", 0.02), 
+            Frequency.new("K", 0.02),
+            Frequency.new("M", 0.02), 
+            Frequency.new("N", 0.02),
+            Frequency.new("R", 0.02), 
+            Frequency.new("S", 0.02),
+            Frequency.new("V", 0.02), 
+            Frequency.new("W", 0.02),
+            Frequency.new("Y", 0.02)];
+
+def HomoSapiens := [Frequency.new("a", 0.3029549426680),
+                    Frequency.new("c", 0.1979883004921),
+                    Frequency.new("g", 0.1975473066391),
+                    Frequency.new("t", 0.3015094502008)];
+
+def makeRepeatFasta(id, desc, alu, n) {
+  def index := 1;
+  def     k := 1;
+  def    kn := ALUB.length() + 1;
+  
+  system.println(">" + id + " " + desc); 
+  
+  while: { n > 0 } do: {
+    def m;
+    
+    if: n < LINE_LENGTH
+        then: { m := n }
+        else: { m := LINE_LENGTH };
+    
+    if: BUFFER_SIZE - index + 1 < m then: {
+      system.print(bbuffer.select(1, index).implode());
+      index := 1;
+    };
+    
+    m.doTimes: { | i |
+      if: k == kn then: { k := 1 };
+      bbuffer[index] := ALUB[k];
+      index := index + 1;
+      k := k + 1;
+    };
+   
+    bbuffer[index] := "\n";
+    index := index + 1;
+    n := n - LINE_LENGTH;
+  };
+  
+  if: index != 1 then: { system.print(bbuffer.select(1, index).implode()) };
+};
+    
+
+makeCumulative(HomoSapiens);
+makeCumulative(IUB);
+
+makeRepeatFasta("ONE", "Homo sapiens alu",                 ALU, n * 2);
+makeRandomFasta("TWO", "IUB ambiguity codes",              IUB, n * 3);
+makeRandomFasta("THREE", "Homo sapiens frequency", HomoSapiens, n * 5);

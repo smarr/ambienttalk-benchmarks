@@ -1,0 +1,116 @@
+/*
+  fannkuch-redux: Indexed-access to tiny integer-sequence
+
+  This benchmark is based on the Computer Language Benchmarks Game.
+  http://benchmarksgame.alioth.debian.org/
+*/
+
+/*if: system.argv.length == 0 then: {
+  system.println("Usage: fannkuch-redux.at <num>");
+  system.exit();
+};*/
+
+def n := 7;
+
+if: system.argv.length >= 1 then: {
+  n := system.argv[1].parseNumeric();
+};
+
+def createTableWithInitialValue(size, val) {
+  def t[size] { val };
+  t
+};
+
+def PermGeneratorRedux := object: {
+  def timesRotated;
+  def perm;
+  def atEnd;
+  
+  def init(size) {
+    perm         := 1 *** size;
+    timesRotated := createTableWithInitialValue(size, 0);
+    atEnd := false;
+  };
+  
+  def makeNext() {
+    { | return |
+    // Generate the next permutation
+    2.to: perm.length() + 1 do: { | r |
+      // Rotate the first r items to the left.
+      def temp := perm.at(1);
+      
+      1.to: r do: { | i | perm.atPut(i, perm.at(i + 1))};
+      perm.atPut(r, temp);
+          
+      def remainder := timesRotated.atPut(r, (timesRotated.at(r) + 1) % r);
+      if: remainder != 0 then: {
+      	return();
+      };
+     
+      // After r rotations, the first r items are in their original positions.
+      // Go on rotating the first r+1 items.
+    };
+
+    // We are past the final permutation.
+    atEnd := true }.escape()
+  };
+
+  def next() {
+    def result := clone: perm;
+    self.makeNext();
+    result
+  };
+};
+
+def pfannkuchen(anArray) {
+  def k := 0;
+   
+  while: { anArray.at(1) != 1 } do: {
+    def first := anArray.at(1);
+    k := k + 1;
+    def complement := first + 1;
+     
+    1.to: (first / 2).floor() + 1 do: { | i |
+      def a := anArray.at(i);
+      def b := anArray.at(complement - i);
+      anArray.atPut(i, b);
+      anArray.atPut(complement - i, a);
+    }
+  };
+  k
+};
+
+def fannkuch(gen) {
+   def max       := 0;
+   def permCount := 0;
+   def checksum  := 0;
+   
+   while: { !gen.atEnd } do: {
+     def permutation := gen.next();
+     
+     system.println(permutation);
+     
+     permCount := permCount + 1;
+     system.println(permCount);
+      
+      if: permCount = 1048576 then: { permCount := 0 };
+      
+      def flipsCount := pfannkuchen(permutation);
+      system.print("flipsCount: ");
+      system.println(flipsCount);
+      
+      checksum := if: (permCount % 2) = 1 then: { checksum + flipsCount }
+                                          else: { checksum - flipsCount }; 
+      
+      max := if: max > flipsCount then: { max } else: { flipsCount };
+   };
+   
+   system.println(checksum);
+   
+   max
+};
+
+def permGen := PermGeneratorRedux.new(n);
+
+system.println("Pfannkuchen("+ n.toText() +") = "+ fannkuch(permGen).toText());
+system.exit();

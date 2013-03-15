@@ -1,0 +1,134 @@
+/*
+  thread-ring: Repeatedly switch from thread to thread passing one token.
+
+  This benchmark is based on the Computer Language Benchmarks Game.
+  http://benchmarksgame.alioth.debian.org/
+*/
+
+if: system.argv.length < 1 then: {
+  system.println("Usage: threadring.at <mode> <num-passes> [num-threads] [num-slaves]
+
+Argument:
+  mode         master or slave
+  num-passes   number of times a token is passed between threads (not required for slave)
+  num-threads  number of threads to be used (default: 503) (not required for slave)
+  num-slaves   number of slaves to be used (not required for slave)");
+  system.exit();
+};
+
+// configuration
+def masterMode := nil;
+def numPasses  := 50000000;
+def numThreads := 503;
+def numSlaves  := 1;
+
+// parse command line parameters
+if: system.argv.length >= 1 then: {
+  masterMode := system.argv[1] == "master";
+  
+  if: (masterMode.and: { system.argv.length >= 2 }) then: {
+    numPasses  := system.argv[2].parseNumeric();
+  
+    if: system.argv.length >= 3 then: {
+      numThreads := system.argv[3].parseNumeric();
+    }
+  }
+};
+
+// activate futures
+import /.at.lang.futures;
+enableFutures(true);
+
+// define program
+
+def makeActorFactory() {
+  object: {
+    def makeActor(next, id) {
+	  def act := actor: {
+	    def nextActor;
+	    
+	    def next(cnt) {
+	       // system.println(id); system.println(cnt);
+	      if: cnt == 0 then: { 
+	        system.println(id);
+	        system.exit(); }
+	      else: { nextActor<-next(cnt - 1) }
+	    };
+	    
+	    def setNext(actor) { nextActor := actor };
+	  };
+	  
+	  act<-setNext(next);
+	  act
+	};
+	
+    def shutdown() {
+      system.exit();
+    }
+  }
+};
+
+def slaves := [numSlaves];
+
+def createRing(numActors) {
+  def factory := makeActorFactory();
+  def prev  := nil;
+  def first := nil;
+  
+  numActors.doTimes: { | i |
+    def hostId := i % (numSlaves + 1);
+    
+    def act;
+    if: hostId == 0 then: {
+      act := factor.makeActor(prev, i);
+    } else: {
+      act := slaves.at(hostId)<-makeActor(prev, i);
+    };
+  
+    def act := makeActor(prev, i);
+    
+    (prev == nil).ifTrue: { first := act };
+    prev := act;
+  };
+  
+  first<-setNext(prev);
+  prev
+};
+
+
+// turn on the network
+network.online();
+
+deftype ActorFactory;
+
+
+
+if: masterMode then: {
+  system.println("Master Mode, wait for slaves.");
+
+  def discoveredSlaves := 0;
+  
+  def [allSlavesDiscovered, allSlavesDiscoveredResolver] := makeFuture();
+  
+  def discovery := whenever: ActorFactory discovered: { | factory |
+    discoveredSlaves := discoveredSlaves + 1;
+    
+    system.println(discoveredSlaves);
+    
+    slaves.atPut(discoveredSlaves, factory);
+    
+    if: discoveredSlaves == numSlaves then: {
+      allSlavesDiscoveredResolver.resolve(true);
+      discovery.cancel();
+    }
+  };
+  
+  when: allSlavesDiscovered becomes: { |result|
+    system.println("All slaves discovered. Start benchmark.");
+    createRing(numThreads)<-next(numPasses)
+  }
+}
+else: { // slave mode
+  export: makeActorFactory() as: ActorFactory;
+  system.println("Exported ActorFactory");
+}
