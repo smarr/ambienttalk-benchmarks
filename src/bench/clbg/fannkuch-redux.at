@@ -5,10 +5,10 @@
   http://benchmarksgame.alioth.debian.org/
 */
 
-/*if: system.argv.length == 0 then: {
+if: system.argv.length == 0 then: {
   system.println("Usage: fannkuch-redux.at <num>");
   system.exit();
-};*/
+};
 
 def n := 7;
 
@@ -81,36 +81,29 @@ def pfannkuchen(anArray) {
 };
 
 def fannkuch(gen) {
-   def max       := 0;
-   def permCount := 0;
-   def checksum  := 0;
+  def max       := 0;
+  def permCount := 0;
+  def checksum  := 0;
    
-   while: { !gen.atEnd } do: {
-     def permutation := gen.next();
-     
-     system.println(permutation);
-     
-     permCount := permCount + 1;
-     system.println(permCount);
+  while: { !gen.atEnd } do: {
+    def permutation := gen.next();
+    permCount := permCount + 1;
       
-      if: permCount = 1048576 then: { permCount := 0 };
+    if: permCount = 1048576 then: { permCount := 0 };
       
-      def flipsCount := pfannkuchen(permutation);
-      system.print("flipsCount: ");
-      system.println(flipsCount);
+    def flipsCount := pfannkuchen(permutation);
       
-      checksum := if: (permCount % 2) = 1 then: { checksum + flipsCount }
-                                          else: { checksum - flipsCount }; 
+    checksum := if: (permCount % 2) = 1 then: { checksum + flipsCount }
+                                        else: { checksum - flipsCount }; 
       
-      max := if: max > flipsCount then: { max } else: { flipsCount };
-   };
+    max := if: max > flipsCount then: { max } else: { flipsCount };
+  };
    
-   system.println(checksum);
+  system.println(checksum);
    
-   max
+  max
 };
 
 def permGen := PermGeneratorRedux.new(n);
 
 system.println("Pfannkuchen("+ n.toText() +") = "+ fannkuch(permGen).toText());
-system.exit();

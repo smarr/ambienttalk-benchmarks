@@ -5,10 +5,10 @@
   http://benchmarksgame.alioth.debian.org/
 */
 
-/*if: system.argv.length == 0 then: {
+if: system.argv.length == 0 then: {
   system.println("Usage: fasta.at <num>");
   system.exit();
-};*/
+};
 
 def n := 1000; //2500000;
 

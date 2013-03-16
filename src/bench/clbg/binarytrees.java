@@ -21,7 +21,7 @@ public class binarytrees extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		setN(10);
+		setN(7);
 	}
 	
 	public void timeBinaryTrees(int reps) {

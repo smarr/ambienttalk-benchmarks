@@ -21,7 +21,7 @@ public class fannkuchredux extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		setN(7);
+		setN(5);
 	}
 	
 	public void timeFannkuchRedux(int reps) {

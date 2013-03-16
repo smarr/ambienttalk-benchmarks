@@ -27,12 +27,23 @@ def createRing(numActors) {
   numActors.doTimes: { | i |
     def act := actor: {
       def nextActor;
+      
+      def signalEndOfBenchmark() {
+  		jlobby.bench.clbg.ThreadRingAT.sendSignal()
+	  };
+      
       def next(cnt) {
          // system.println(i);system.println(cnt);
-        (cnt == 0).ifTrue: { system.println(i); system.exit(); }
+        (cnt == 0).ifTrue: {
+        	system.println(i);
+        	signalEndOfBenchmark();
+        }
         ifFalse: { nextActor<-next(cnt - 1)}
       };
-      def setNext(actor) { nextActor := actor };
+      
+      def setNext(actor) {
+        nextActor := actor
+      };
     };
     
     act<-setNext(prev);
@@ -45,4 +56,3 @@ def createRing(numActors) {
 };
 
 createRing(numThreads)<-next(numPasses)
-
