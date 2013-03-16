@@ -18,8 +18,16 @@ public class BenchIAT extends IAT {
 	public static BenchIAT create() throws InterpreterException {
 		return create(IATSettings.getDefaultIATOptions());
 	}
+	
+	public static BenchIAT create(String[] args) throws InterpreterException {
+		return create(IATSettings.getDefaultIATOptions(), args);
+	}
+	
+	public static BenchIAT create(IATOptions iatOptions) throws InterpreterException {
+		return create(iatOptions, null);
+	}
 
-	public static BenchIAT create(IATOptions iatOptions)
+	public static BenchIAT create(IATOptions iatOptions, String[] additinalArgs)
 			throws InterpreterException {
 		File _ENV_AT_HOME_ = new File(iatOptions.AT_HOME_);
 
@@ -34,6 +42,11 @@ public class BenchIAT extends IAT {
 
 		if (iatOptions.startFile_ != null)
 			args.add(iatOptions.startFile_);
+		
+		if (additinalArgs != null) {
+			args.add("BenchIAT"); // a dummy for the script name
+			args.addAll(Arrays.asList(additinalArgs));
+		}
 
 		BenchIAT instance = new BenchIAT(args.toArray(new String[args.size()]));
 		return instance;
@@ -57,6 +70,12 @@ public class BenchIAT extends IAT {
 	
 	public ATObject evaluate(final ATAbstractGrammar ast) throws InterpreterException {
 		return evaluator_.sync_event_eval(ast);
+	}
+	
+	@Override
+	protected void loadMainCode() {
+		/* NOP */
+		// we want full control, there is now main code to be handled here.
 	}
 	
 
