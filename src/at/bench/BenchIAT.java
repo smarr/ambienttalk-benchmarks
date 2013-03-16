@@ -1,6 +1,7 @@
 package at.bench;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -48,6 +49,10 @@ public class BenchIAT extends IAT {
 	
 	public ATAbstractGrammar parse(String filename, String expression) throws InterpreterException {
 		return NATParser.parse(filename, expression);
+	}
+	
+	public ATAbstractGrammar parse(String filename, InputStream file) throws InterpreterException {
+		return NATParser.parse(filename, file);
 	}
 	
 	public ATObject evaluate(final ATAbstractGrammar ast) throws InterpreterException {
