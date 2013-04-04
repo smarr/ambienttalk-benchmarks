@@ -78,6 +78,11 @@ public class BenchIAT extends IAT {
 		// we want full control, there is now main code to be handled here.
 	}
 	
+	public void stopProcessing() {
+		this.evaluator_.stopProcessing();
+		this.repl_.stopProcessing();
+	}
+	
 
 	/*
 	 * Emulate the behavior of the IAT start-script. Returns a string of the
