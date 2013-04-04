@@ -3,9 +3,10 @@
         simple example build file
     </description>
   <!-- set global properties for this build -->
-  <property name="src"   location="src"/>
-  <property name="build" location="bin"/>
-  <property name="dist"  location="dist"/>
+  <property name="src"   location="src"  />
+  <property name="build" location="bin"  />
+  <property name="dist"  location="dist" />
+  <property name="lib"   location="lib"  />
 
   <target name="init">
     <!-- Create the time stamp -->
@@ -13,6 +14,19 @@
     <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}"/>
   </target>
+
+  <target name="deps">
+    <get dest="${lib}">
+      <url url="https://ambienttalk.googlecode.com/files/at2dist060213.zip" />
+    </get>
+    <unzip src="${lib}/at2dist060213.zip" dest="${lib}" />
+    <move todir="${lib}">
+      <fileset dir="${lib}/jlib">
+        <include name="*.jar" />
+      </fileset>
+    </move>
+    <mkdir dir="${lib}/atlib/cache" />
+ </target>
 
   <target name="compile" depends="init"
         description="compile the source " >
