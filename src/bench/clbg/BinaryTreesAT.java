@@ -15,6 +15,10 @@ public class BinaryTreesAT extends Benchmark {
 	
 	@Override
 	protected void setUp() {
+		// nothing for AT :(
+	}
+	
+	public void timeBinaryTrees(int reps) {
 		try {
 			InputStream strm;
 
@@ -22,15 +26,10 @@ public class BinaryTreesAT extends Benchmark {
 			strm = BinaryTreesAT.class
 					.getResourceAsStream("/bench/clbg/binarytrees.at");
 			binaryTrees = binaryTreeIAT.parse("binarytrees.at", strm);
+			
+			binaryTreeIAT.evaluate(binaryTrees);
+			binaryTreeIAT.stopProcessing();
 		} catch (InterpreterException e) { e.printStackTrace(); }
-	}
-	
-	public void timeBinaryTrees(int reps) {
-		for (int i = 0; i < reps; i++) {
-			try {
-				binaryTreeIAT.evaluate(binaryTrees);
-			} catch (InterpreterException e) { e.printStackTrace();  }
-		}
 	}
 	
 	public static void main(String[] args) {

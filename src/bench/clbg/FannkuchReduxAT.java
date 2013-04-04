@@ -17,23 +17,20 @@ public class FannkuchReduxAT extends Benchmark {
 	
 	@Override
 	protected void setUp() {
+		// nothing for AT
+	}
+	
+	public void timeFannkuch(int reps) {
 		try {
 			InputStream strm;
 			
 			fannkuchIAT = BenchIAT.create(new String[] { "5" });
 			strm = FannkuchReduxAT.class.getResourceAsStream("/bench/clbg/fannkuch-redux.at");
 			fannkuch   = fannkuchIAT.parse("fannkuchredux.at", strm);
-		} catch (InterpreterException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void timeFannkuch(int reps) {
-		for (int i = 0; i < reps; i++) {
-			try {
-				fannkuchIAT.evaluate(fannkuch);
-			} catch (InterpreterException e) { e.printStackTrace();  }
-		}
+			
+			fannkuchIAT.evaluate(fannkuch);
+			fannkuchIAT.stopProcessing();
+		} catch (InterpreterException e) { e.printStackTrace(); }
 	}
 	
 	public static void main(String[] args) {

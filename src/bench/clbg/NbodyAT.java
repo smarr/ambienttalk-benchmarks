@@ -17,23 +17,46 @@ public class NbodyAT extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		try {
-			InputStream strm;
-			
-			nbodyIAT = BenchIAT.create(new String[] { "1000" });
-			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
-			nbody   = nbodyIAT.parse("nbody.at", strm);
-		} catch (InterpreterException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			InputStream strm;
+//			
+//			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+//			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
+//			nbody   = nbodyIAT.parse("nbody.at", strm);
+//		} catch (InterpreterException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void timeNbody(int reps) {
-		for (int i = 0; i < reps; i++) {
-			try {
-				nbodyIAT.evaluate(nbody);
-			} catch (InterpreterException e) { e.printStackTrace();  }
-		}
+		try {
+			InputStream strm;
+				
+			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
+			nbody   = nbodyIAT.parse("nbody.at", strm);
+				
+			nbodyIAT.evaluate(nbody);
+			nbodyIAT.stopProcessing();
+		} catch (InterpreterException e) { e.printStackTrace();  }
+	}
+	
+	public void timeNbodyDoubleParse(int reps) {
+		try {
+			InputStream strm;
+				
+			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
+			nbody   = nbodyIAT.parse("nbody.at", strm);
+			
+			// double it to see how relevant it is to get parsing out of the numbers
+			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
+			nbody   = nbodyIAT.parse("nbody.at", strm);
+				
+			nbodyIAT.evaluate(nbody);
+			nbodyIAT.stopProcessing();
+		} catch (InterpreterException e) { e.printStackTrace();  }
 	}
 	
 	public static void main(String[] args) {

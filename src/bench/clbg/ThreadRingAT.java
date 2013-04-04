@@ -19,20 +19,26 @@ public class ThreadRingAT extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		try {
-			InputStream strm;
-			
-			threadringIAT = BenchIAT.create(new String[] { "1000" });
-			strm = ThreadRingAT.class.getResourceAsStream("/bench/clbg/threadring.at");
-			threadring   = threadringIAT.parse("threadring.at", strm);
-		} catch (InterpreterException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			InputStream strm;
+//			
+//			threadringIAT = BenchIAT.create(new String[] { "1000" });
+//			strm = ThreadRingAT.class.getResourceAsStream("/bench/clbg/threadring.at");
+//			threadring   = threadringIAT.parse("threadring.at", strm);
+//		} catch (InterpreterException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void timeThreadring(int reps) {
 		for (int i = 0; i < reps; i++) {
 			try {
+				InputStream strm;
+				
+				threadringIAT = BenchIAT.create(new String[] { "1000" });
+				strm = ThreadRingAT.class.getResourceAsStream("/bench/clbg/threadring.at");
+				threadring   = threadringIAT.parse("threadring.at", strm);
+				
 				synchronized (signal) {
 					threadringIAT.evaluate(threadring);
 					signal.wait();
