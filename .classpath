@@ -4,7 +4,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/Users/smarr/Projects/PostDoc/AliasMOP/at2dist060213/jlib/java-getopt-1.0.13.jar"/>
 	<classpathentry kind="lib" path="/Users/smarr/Projects/PostDoc/AliasMOP/at2dist060213/jlib/antlr.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/at-interpreter"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/atlib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iat"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/parser"/>
+	<classpathentry kind="src" path="/caliper"/>
 	<classpathentry kind="lib" path="lib/ambienttalk2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/caliper"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
