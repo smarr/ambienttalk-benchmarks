@@ -21,7 +21,7 @@
         <classpath>
            <pathelement path="${classpath}"/>
            <pathelement location="lib/ambienttalk2.jar" />
-           <pathelement location="lib/caliper-1.0-SNAPSHOT.jar" />
+           <pathelement location="lib/uber-caliper-1.0-SNAPSHOT.jar" />
         </classpath>
     </javac>
   </target>
