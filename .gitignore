@@ -1,4 +1,10 @@
 bin
 build
 dist
+lib/*
+
+# ReBench Data
+*.data
+*.data.csv
+*.result.csv
 
