@@ -31,13 +31,16 @@
   <target name="compile" depends="init"
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac includeantruntime="false" srcdir="${src}" destdir="${build}">
+    <javac includeantruntime="false" srcdir="${src}" destdir="${build}" debug="true">
         <classpath>
            <pathelement path="${classpath}"/>
            <pathelement location="lib/ambienttalk2.jar" />
            <pathelement location="lib/uber-caliper-1.0-SNAPSHOT.jar" />
         </classpath>
     </javac>
+    <copy todir="${build}">
+      <fileset dir="${src}" includes="**/*.at" />
+    </copy>
   </target>
 
   <target name="dist" depends="compile"
