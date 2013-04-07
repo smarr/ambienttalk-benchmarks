@@ -22,7 +22,7 @@ public class BinaryTreesAT extends Benchmark {
 		try {
 			InputStream strm;
 
-			binaryTreeIAT = BenchIAT.create(new String[] { "7" });
+			binaryTreeIAT = BenchIAT.create(new String[] { "10" });
 			strm = BinaryTreesAT.class
 					.getResourceAsStream("/bench/clbg/binarytrees.at");
 			binaryTrees = binaryTreeIAT.parse("binarytrees.at", strm);

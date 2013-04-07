@@ -138,18 +138,17 @@ public class fasta extends Benchmark {
 		makeCumulative(HomoSapiens);
 		makeCumulative(IUB);
 
-		setOut(System.out);
-		setN(1000);
+		//setOut(System.out);
+		setOut(new PrintStream("fasta.out"));
+		setN(6500);
 	}
 
 	public void timeFasta(int reps) {
 		try {
-			for (int i = 0; i < reps; i++) {
-				makeRepeatFasta("ONE", "Homo sapiens alu", ALU, n * 2, out);
-				makeRandomFasta("TWO", "IUB ambiguity codes", IUB, n * 3, out);
-				makeRandomFasta("THREE", "Homo sapiens frequency", HomoSapiens,
+			makeRepeatFasta("ONE", "Homo sapiens alu", ALU, n * 2, out);
+			makeRandomFasta("TWO", "IUB ambiguity codes", IUB, n * 3, out);
+			makeRandomFasta("THREE", "Homo sapiens frequency", HomoSapiens,
 						n * 5, out);
-			}
 		} catch (IOException e) {
 		}
 	}

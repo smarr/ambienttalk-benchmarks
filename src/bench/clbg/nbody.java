@@ -20,13 +20,11 @@ public final class nbody extends Benchmark {
 
 	@Override
 	protected void setUp() {
-		setN(1000);
+		setN(300);
 	}
 	
 	public void timeNbody(int reps) {
-		for (int i = 0; i < reps; i++) {
-			benchmarkNbody();
-		}
+		benchmarkNbody();
 	}
 	
 	public void benchmarkNbody() {

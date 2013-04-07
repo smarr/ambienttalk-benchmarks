@@ -24,7 +24,7 @@ public class FastaAT extends Benchmark {
 		try {
 			InputStream strm;
 			
-			fastaIAT = BenchIAT.create(new String[] { "1000" });
+			fastaIAT = BenchIAT.create(new String[] { "6500" });
 			strm = FastaAT.class.getResourceAsStream("/bench/clbg/fasta.at");
 			fasta   = fastaIAT.parse("fasta.at", strm);
 			fastaIAT.evaluate(fasta);
@@ -36,12 +36,12 @@ public class FastaAT extends Benchmark {
 		try {
 			InputStream strm;
 			
-			fastaIAT = BenchIAT.create(new String[] { "1000" });
+			fastaIAT = BenchIAT.create(new String[] { "6500" });
 			strm = FastaAT.class.getResourceAsStream("/bench/clbg/fasta.at");
 			fasta   = fastaIAT.parse("fasta.at", strm);
 			
 			// double it to see how relevant it is to get parsing out of the numbers
-			fastaIAT = BenchIAT.create(new String[] { "1000" });
+			fastaIAT = BenchIAT.create(new String[] { "6500" });
 			strm = FastaAT.class.getResourceAsStream("/bench/clbg/fasta.at");
 			fasta   = fastaIAT.parse("fasta.at", strm);
 			

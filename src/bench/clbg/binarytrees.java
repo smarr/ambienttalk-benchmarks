@@ -21,13 +21,11 @@ public class binarytrees extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		setN(7);
+		setN(10);
 	}
 	
 	public void timeBinaryTrees(int reps) {
-		for (int i = 0; i < reps; i++) {
-			benchmarkBinaryTrees();
-		}
+		benchmarkBinaryTrees();
 	}
 	
 	public void benchmarkBinaryTrees() {

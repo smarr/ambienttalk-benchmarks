@@ -24,7 +24,7 @@ public class FannkuchReduxAT extends Benchmark {
 		try {
 			InputStream strm;
 			
-			fannkuchIAT = BenchIAT.create(new String[] { "5" });
+			fannkuchIAT = BenchIAT.create(new String[] { "8" });
 			strm = FannkuchReduxAT.class.getResourceAsStream("/bench/clbg/fannkuch-redux.at");
 			fannkuch   = fannkuchIAT.parse("fannkuchredux.at", strm);
 			

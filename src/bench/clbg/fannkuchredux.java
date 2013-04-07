@@ -21,13 +21,11 @@ public class fannkuchredux extends Benchmark {
 	
 	@Override
 	protected void setUp() {
-		setN(5);
+		setN(8);
 	}
 	
 	public void timeFannkuchRedux(int reps) {
-		for (int i = 0; i < reps; i++) {
-			benchmarkFannkuchRedux();
-		}
+		benchmarkFannkuchRedux();
 	}
 	
 	public void benchmarkFannkuchRedux() {

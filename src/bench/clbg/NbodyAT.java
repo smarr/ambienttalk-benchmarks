@@ -32,7 +32,7 @@ public class NbodyAT extends Benchmark {
 		try {
 			InputStream strm;
 				
-			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			nbodyIAT = BenchIAT.create(new String[] { "300" });
 			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
 			nbody   = nbodyIAT.parse("nbody.at", strm);
 				
@@ -45,12 +45,12 @@ public class NbodyAT extends Benchmark {
 		try {
 			InputStream strm;
 				
-			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			nbodyIAT = BenchIAT.create(new String[] { "300" });
 			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
 			nbody   = nbodyIAT.parse("nbody.at", strm);
 			
 			// double it to see how relevant it is to get parsing out of the numbers
-			nbodyIAT = BenchIAT.create(new String[] { "1000" });
+			nbodyIAT = BenchIAT.create(new String[] { "300" });
 			strm = NbodyAT.class.getResourceAsStream("/bench/clbg/nbody.at");
 			nbody   = nbodyIAT.parse("nbody.at", strm);
 				
