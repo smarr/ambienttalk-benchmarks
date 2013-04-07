@@ -8,6 +8,7 @@ package bench.clbg;
  *
  */
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -139,7 +140,8 @@ public class fasta extends Benchmark {
 		makeCumulative(IUB);
 
 		//setOut(System.out);
-		setOut(new PrintStream("fasta.out"));
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		setOut(new PrintStream(buffer));
 		setN(6500);
 	}
 
