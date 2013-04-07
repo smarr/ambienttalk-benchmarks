@@ -139,13 +139,16 @@ public class fasta extends Benchmark {
 		makeCumulative(HomoSapiens);
 		makeCumulative(IUB);
 
-		//setOut(System.out);
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		setOut(new PrintStream(buffer));
+		// setOut(System.out);
+		// ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		// setOut(new PrintStream(buffer));
 		setN(6500);
 	}
 
 	public void timeFasta(int reps) {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		out = new PrintStream(buffer);
+
 		try {
 			makeRepeatFasta("ONE", "Homo sapiens alu", ALU, n * 2, out);
 			makeRandomFasta("TWO", "IUB ambiguity codes", IUB, n * 3, out);
